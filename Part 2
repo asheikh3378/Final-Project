@@ -1,0 +1,60 @@
+#ALISSA SHEIKH PROJECT PART 2 PSID: 1623952
+from datetime import datetime
+
+from csv_reader_part_1 import Reader
+
+if __name__ == '__main__':
+    instance = Reader()
+    items = instance.read_file('./FullInventory.csv',
+                               ['item_id', 'manufacturer_name', 'item_type', 'price', 'service_date', 'state'])
+
+    allow = True
+    while allow:
+        in_values = input(
+            'Please, input [item type] and [manufacturer_name] separated by a comma: (enter "q" to quit) \n')
+        if in_values == 'q':
+            allow = False
+            break
+        else:
+            item_type, manufacturer_name = in_values.split(',')
+            item_by_type, count = instance.get_item_with_type(items, item_type)
+            item_by_manufacturer = instance.get_item_with_manufacter_name(
+                items, manufacturer_name)
+
+            if item_by_type:
+                print(
+                    f'''Your item is: ID: {item_by_type['item_id']} 
+                        Manufacterer: {item_by_type['manufacturer_name']} 
+                        Type: {item_by_type['item_type']} 
+                        Price: {item_by_type['price']}'''
+                )
+            if item_by_manufacturer:
+                print(
+                    f'''Your item is: ID: {item_by_manufacturer['item_id']} 
+                        Manufacterer: {item_by_manufacturer['manufacturer_name']} 
+                        Type: {item_by_manufacturer['item_type']} 
+                        Price: {item_by_manufacturer['price']}''')
+            elif not item_by_manufacturer and not item_by_type:
+                print('No such item in inventory')
+
+            if count > 1:
+                _items = instance.get_item_with_manufacters_by_type(
+                    items, item_type)
+                _item, _ = count = instance.get_item_with_type(
+                    items, item_type)
+
+                for item in _items:
+                    if (item['item_id'] == _item['item_id']):
+                        _items.remove(item)
+                        new_dict = item
+
+                today = datetime.today().date()
+                date_format = "%m/%d/%Y"
+
+                for item in _items:
+                    service_date = datetime.strptime(
+                        item['service_date'], date_format).date()
+                    difference = service_date - today
+                    print(difference.days)
+                    if item['state'] != 'damaged' and difference.days > 0:
+                        print(f'You may, also, consider: {item}')

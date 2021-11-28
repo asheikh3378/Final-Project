@@ -1,0 +1,44 @@
+#ALISSA SHEIKH PROJECT PART 1 PSID: 1623952
+class Reader:
+    def read_file(self, path, names):  # To read and accept all applicable files
+        items = []
+        with open(path, 'r') as file:
+            for line in file:
+                item = {}
+                index = 0
+                for value in line.strip().split(','):
+                    # To match value in a file line to a column title
+                    item[names[index]] = value
+                    index += 1
+                items.append(item)
+        return items
+
+    # To accept all items and item_type,
+    def get_item_with_type(self, items, item_type):
+        # allowing to search for an item using item id
+        item_to_return = None
+        count = 0
+        for item in items:
+            if item['item_type'] == item_type:
+                count += 1
+                item_to_return = item
+        return item_to_return, count
+
+    # To accept all items and item_manufacturer,
+    def get_item_with_manufacter_name(self, items, manufacturer_name):
+        # allowing to search for an item using item id
+        item_to_return = None
+        for item in items:
+            if item['manufacturer_name'] == manufacturer_name:
+                item_to_return = item
+        return item_to_return
+
+    # To accept all items and item_manufacturer,
+    def get_item_with_manufacters_by_type(self, items, item_type):
+        # allowing to search for an item using item id
+        items_to_return = []
+        for item in items:
+            if item['item_type'] == item_type:
+                items_to_return.append(item)
+        return items_to_return
+        
